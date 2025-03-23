@@ -1,0 +1,559 @@
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+    bool canEdit = ViewBag.permission[3].Canedit;
+    bool canDelete = ViewBag.permission[3].Candelete;
+
+}
+@model PizzaShop.Repository.ModelView.SectionsHelperViewModel;
+
+<div class="py-4 px-3  d-flex justify-content-between">
+    <h3 class="text-blue">Sections / Tables</h3>
+</div>
+
+<div class="maincontent">
+    <div class="formclass  border rounded d-flex">
+        <Aside class=" rightsideborder sideBar border-right-primary rounded p-3">
+            <div class="logoheader">
+                <h4 class="text-primary d-flex justify-content-between align-items-center">
+                    Sections
+                    @if (canEdit == true)
+                    {
+                        <a type="button" class="text-decoration-none bg-light px-1 border border-2 rounded border-primary"
+                            data-bs-toggle="modal" data-bs-target="#SectionAddModal" data-bs-whatever="">
+                            <img src="~/images/icons/plus-solid.svg" alt="" class="" height="20px">
+                        </a>
+                    }
+                </h4>
+
+            </div>
+            <ul>
+                <div class="nav flex-column nav-pills " id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    @if (Model.Sections != null)
+                    {
+                        <ul>
+                            @foreach (var s in Model.Sections)
+                            {
+                                <li class="nav-link links section-link d-flex justify-content-between align-items-center                                                                                                                                                                                                                                                                      gap-2 @(ViewBag.SeclectedSectionId == s.Sectionid ? "active" : "")"
+                                    id="v-pills-@s.Sectionid-tab-section" data-sectionid="@s.Sectionid"
+                                    data-sectionname="@s.Sectionname" data-sectiondescription="@s.Sectiondescription">
+
+                                    <a
+                                        class="text-decoration-none @((ViewBag.SeclectedSectionId == s.Sectionid) ? "text-white" : "text-dark")">
+                                        <i class="bi bi-grid-3x2-gap-fill me-2"></i>@s.Sectionname
+                                    </a>
+
+                                    <div class="activePens d-none">
+                                        @if (canEdit)
+                                        {
+                                            <a href="#" class="text-primary edit-section-button" data-sectionid="@s.Sectionid"
+                                                data-sectionname="@s.Sectionname" data-sectiondescription="@s.Sectiondescription">
+                                                <i class="bi bi-pen mx-1"></i>
+                                            </a>
+                                        }
+                                        @if (canDelete)
+                                        {
+                                            <a href="#" class="text-primary delete-section-btn">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center">No Sections Found</div>
+                    }
+                </div>
+            </ul>
+
+        </Aside>
+
+        <div class="p-3 w-100">
+            <h5>Tables</h5>
+            <div class="tab-content " id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="" role="tabpanel" aria-labelledby="v-pills-sandwich-tab"
+                    tabindex="0">
+                    <div class="d-flex justify-content-end ">
+                        <div class="position-relative bg-white border mx-2 border-1 rounded ">
+                            <input type="text" id="searchInput" placeholder="Search" class="search_bar">
+
+                            <img src="~/images/search-icon.svg" width="20px" class="search_bar_img">
+                        </div>
+                        @if (canDelete == true)
+                        {
+                            <button class="btn btn-light border p-2 ms-2" id="deleteMultipleTablesBtn" disabled>
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        }
+                        @if (canEdit == true)
+                        {
+                            <button disabled href="#" data-bs-toggle="modal" id="TableAddModalID"
+                                data-bs-target="#TableAddModal"
+                                class=" btn btn-primary text-decoration-none mx-2  d-flex justify-content-center align-items-center p-2 rounded text-white">+<span
+                                    class="spanClass text-white" id="buttonContent">New Table</span></button>
+                        }
+                    </div>
+                    @* ----partial view for Tables---- *@
+                    <div id="collapse5" class="tabularData ">
+
+
+                    </div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end align-items-center d-lg-flex d-sm-flex gap-2">
+                            <div class="d-flex align-items-center mb-2 mt-2">
+                                <span>Items per page: &nbsp;</span>
+                                <div class="dropdown">
+                                    <button class="btn border dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false" id="itemsPerPageBtn4">5</button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item page-size-option page-size-option4" href="#"
+                                                data-size="5">5</a></li>
+                                        <li><a class="dropdown-item page-size-option page-size-option4" href="#"
+                                                data-size="10">10</a></li>
+                                        <li><a class="dropdown-item page-size-option page-size-option4" href="#"
+                                                data-size="15">15</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-2 mt-2 gap-2">
+                                <span id="pagination-info">Showing 1-5 of </span>
+                                <li class="page-item">
+                                    <a class="page-link" id="prevPage4" href="#">&lt;</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" id="nextPage4" href="#">></a>
+                                </li>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@* add section modal *@
+<div class="modal fade" id="SectionAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Section</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-action="AddSection" asp-controller="Section">
+                    <input type="hidden" asp-for="Userid" value="@ViewBag.UserId">
+                    <div class="form-floating mb-3">
+                        <input asp-for="Sectionname" type="text" class="form-control" id="floatingInput"
+                            placeholder="name">
+                        <label for="floatingInput">name</label>
+                        <span class="text-danger" asp-validation-for="Sectionname"></span>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" asp-for="Sectiondescription" placeholder="Leave a comment here"
+                            id="floatingTextarea2" style="height: 100px"></textarea>
+                        <label for="floatingTextarea2">Description</label>
+                        <span class="text-danger" asp-validation-for="Sectiondescription"></span>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn border-primary text-primary"
+                            data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@* table add modal *@
+<div class="modal fade" id="TableAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Table</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-action="AddTable" asp-controller="Section">
+                    <input type="hidden" asp-for="Userid" value="@ViewBag.UserId">
+                    <div class="row">
+                        <div class="col-6 form-floating mb-3">
+                            <input asp-for="Tablename" type="text" class="form-control" id="floatingInput"
+                                placeholder="name">
+                            <label for="floatingInput" class="mx-2">name</label>
+                            <span class="text-danger" asp-validation-for="Tablename"></span>
+                        </div>
+                        <div class="col-6 form-floating mb-3">
+                            <input type="hidden" asp-for="Sectionid" value="" id="sectionIdAtAddTable">
+                            <input asp-for="SectionnameTableHelper" type="text" class="form-control"
+                                id="sectionNameAtAddTable" placeholder="" disabled value="">
+                            <label for="floatingSelect" class="mx-2">Select Section</label>
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-6 form-floating mb-3">
+                            <input asp-for="Capacity" type="text" class="form-control" id="floatingInput"
+                                placeholder="capacity">
+                            <label for="floatingInput" class="mx-2">capacity</label>
+                            <span class="text-danger" asp-validation-for="Capacity"></span>
+                        </div>
+                        <div class="col-6 form-floating mb-3">
+                            <select readonly class="form-select" asp-for="Status" id="floatingSelect"
+                                aria-label="Status">
+                                <option value="1" selected>Availble</option>
+                                <option value="2">Occupied</option>
+                            </select>
+
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                            <label for="floatingSelect" class="mx-2">Status</label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn border-primary text-primary"
+                            data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@* edit modal for section *@
+<div class="modal fade" id="editSectionModal" tabindex="-1" data-bs-backdrop="static"
+    aria-labelledby="editCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Edit Section</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-action="EditSection" asp-controller="Section">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="editSectionName" asp-for="Sectionname"
+                            placeholder="Section Name">
+                        <label>Section</label>
+                        <span class="text-danger" asp-validation-for="Sectionname"></span>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="editSectionDescription" asp-for="Sectiondescription"
+                            placeholder="Description" style="height: 100px; resize: none;"></textarea>
+                        <label>Description</label>
+                        <span class="text-danger" asp-validation-for="Sectiondescription"></span>
+                    </div>
+                    <input type="hidden" id="editSectionId" asp-for="Sectionid">
+                    <input type="hidden" name="Userid" value="@ViewBag.UserId">
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn border-primary text-primary"
+                            data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@* modal for delete section *@
+
+<div class="modal fade" id="deleteSectionModal" tabindex="-1" data-bs-backdrop="static"
+    aria-labelledby="deleteCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Delete Section</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                <img src="~/images/toppng.com-warning-icon-2400x2400.png" height="40px" width="40px">
+                <div id="deleteCategoryText">Are you sure you want to delete this Section?</div>
+            </div>
+            <form method="post" asp-action="DeleteSection" asp-controller="Section">
+                <input type="hidden" id="deleteSectionId" name="Sectionid">
+                <input type="hidden" name="Userid" value="@ViewBag.UserId">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                    <button type="button" class="btn border-primary text-primary" data-bs-dismiss="modal">No</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@* modal for delete multiple table *@
+<div class="modal fade" id="deleteTablesModal" tabindex="-1" data-bs-backdrop="static"
+    aria-labelledby="deleteCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Delete Tables</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                <img src="~/images/toppng.com-warning-icon-2400x2400.png" height="40px" width="40px">
+                <div id="deleteCategoryText">Are you sure you want to delete Selected Tables?</div>
+            </div>
+            <form method="post" asp-action="DeleteTables" asp-controller="Section">
+                <input type="hidden" id="deleteSelectedTableIds" name="deleteSelectedTableIds">
+                <input type="hidden" name="Userid" value="@ViewBag.UserId">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btn-multiple-delete-submit"
+                        data-bs-dismiss="modal">Yes</button>
+                    <button type="button" class="btn border-primary text-primary" data-bs-dismiss="modal">No</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+@* scripts *@
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            toastr.options.closeButton = true;
+            var successMessage = '@TempData["SectionSuccess"]';
+            var errorMessage = '@TempData["SectionError"]';
+            if (successMessage) {
+                toastr.success(successMessage, 'Success', { timeOut: 3000 });
+            }
+            if (errorMessage) {
+                toastr.error(errorMessage, 'Error', { timeOut: 3000 });
+            }
+
+            var rowsPerPage = 5;
+            var currentPage = 1;
+            var totalTables = @Model.TotalTables;
+            var selectedSection = null;
+            var selectedSectionName = '';
+            var searchTerm = '';
+            var selectedTableIds = new Set();
+
+            function fetchTables(sectionId, searchTerm = '', page, pageSize) {
+                $.ajax({
+                    url: '/Section/FilterTables',
+                    type: 'GET',
+                    data: { sectionId: sectionId, searchTable: searchTerm, pageNumber: page, pageSize: pageSize },
+                    success: function (data) {
+                        $('#collapse5').html(data);
+                        totalTables = parseInt($('#TableContainer').attr('data-total-tables')) || 0;
+                        restoreCheckboxStates();
+                        updatePagination();
+                    },
+                    error: function () {
+                        alert('Error loading tables.');
+                    }
+                });
+            }
+
+            function restoreCheckboxStates() {
+                $('.Table-checkbox').each(function () {
+                    var tableId = $(this).data('table-id');
+                    $(this).prop('checked', selectedTableIds.has(tableId));
+                });
+                updateSelectAllCheckbox();
+            }
+
+            function updatePagination() {
+                var totalPages = Math.ceil(totalTables / rowsPerPage);
+                var startItem = (currentPage - 1) * rowsPerPage + 1;
+                var endItem = Math.min(currentPage * rowsPerPage, totalTables);
+                $("#pagination-info").text(`Showing ${startItem}-${endItem} of ${totalTables}`);
+                $("#prevPage4").toggleClass("disabled", currentPage === 1);
+                $("#nextPage4").toggleClass("disabled", currentPage >= totalPages);
+                $('#deleteMultipleTablesBtn').prop('disabled', selectedTableIds.size === 0);
+            }
+
+            function updateSelectAllCheckbox() {
+                var allChecked = $('.Table-checkbox:visible').length > 0 &&
+                    $('.Table-checkbox:visible').length === $('.Table-checkbox:visible:checked').length;
+                $('#selectAllCheckBoxTable').prop('checked', allChecked);
+            }
+
+            $(document).on('click', '#prevPage4', function (e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    fetchTables(selectedSection, searchTerm, currentPage, rowsPerPage);
+                }
+            });
+
+            $(document).on('click', '#nextPage4', function (e) {
+                e.preventDefault();
+                if (currentPage * rowsPerPage < totalTables) {
+                    currentPage++;
+                    fetchTables(selectedSection, searchTerm, currentPage, rowsPerPage);
+                }
+            });
+
+            $(document).on('click', '.page-size-option4', function (e) {
+                e.preventDefault();
+                rowsPerPage = parseInt($(this).data("size"));
+                $("#itemsPerPageBtn4").text(rowsPerPage);
+                currentPage = 1;
+                fetchTables(selectedSection, searchTerm, currentPage, rowsPerPage);
+            });
+
+            $(document).on('click', '.section-link', function (e) {
+                e.preventDefault();
+                $(".section-link").removeClass("active");
+                $(this).addClass("active");
+                selectedSection = $(this).data('sectionid');
+                selectedSectionName = $(this).data('sectionname');
+                $('#sectionIdAtAddTable').val(selectedSection);
+                $('#sectionNameAtAddTable').val(selectedSectionName);
+                currentPage = 1;
+                selectedTableIds.clear();
+                fetchTables(selectedSection, searchTerm, currentPage, rowsPerPage);
+                $('.activePens').addClass('d-none');
+                $(this).find('.activePens').removeClass('d-none');
+                $('#TableAddModalID').prop('disabled', false);
+            });
+
+            $(document).on('input', '#searchInput', function () {
+                searchTerm = $(this).val().trim();
+                currentPage = 1;
+                fetchTables(selectedSection, searchTerm, currentPage, rowsPerPage);
+            });
+
+            $(document).on('change', '#selectAllCheckBoxTable', function () {
+                var isChecked = this.checked;
+                $('.Table-checkbox:visible').each(function () {
+                    var tableId = $(this).data('table-id');
+                    $(this).prop('checked', isChecked);
+                    if (isChecked) selectedTableIds.add(tableId);
+                    else selectedTableIds.delete(tableId);
+                });
+                updatePagination();
+            });
+
+            $(document).on('change', '.Table-checkbox', function () {
+                var tableId = $(this).data('table-id');
+                if ($(this).is(':checked')) selectedTableIds.add(tableId);
+                else selectedTableIds.delete(tableId);
+                updatePagination();
+                updateSelectAllCheckbox();
+            });
+
+            $(document).on('click', '#deleteMultipleTablesBtn', function (e) {
+                e.preventDefault();
+                if (selectedTableIds.size > 0) {
+                    $('#deleteSelectedTableIds').val(Array.from(selectedTableIds).join(','));
+                    var deleteModal = new bootstrap.Modal(document.getElementById('deleteTablesModal'));
+                    deleteModal.show();
+                }
+            });
+
+            $(document).on('submit', '#deleteTablesModal form', function (e) {
+                e.preventDefault();
+                var deleteModal = new bootstrap.Modal(document.getElementById('deleteTablesModal')); // Get modal instance
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function () {
+                        selectedTableIds.clear();
+                        fetchTables(selectedSection, searchTerm, currentPage, rowsPerPage);
+                        deleteModal.hide(); // Close the modal on success
+                    },
+                    error: function () {
+                        alert('Error deleting tables.');
+                        deleteModal.hide(); // Optionally close on error
+                    }
+                });
+            });
+
+            $('#TableAddModal').on('show.bs.modal', function (e) {
+                if (selectedSection && selectedSectionName) {
+                    $('#sectionIdAtAddTable').val(selectedSection);
+                    $('#sectionNameAtAddTable').val(selectedSectionName);
+                } else {
+                    $('#sectionNameAtAddTable').val('No section selected');
+                    $('#sectionIdAtAddTable').val('');
+                }
+            });
+
+            $(document).on('click', '.edit-section-button', function (e) {
+                e.preventDefault();
+                var sectionId = $(this).data("sectionid");
+                var sectionElement = $(`[data-sectionid='${sectionId}']`);
+                var sectionName = sectionElement.data("sectionname");
+                var sectionDescription = sectionElement.data("sectiondescription");
+
+                $("#editSectionId").val(sectionId);
+                $("#editSectionName").val(sectionName);
+                $("#editSectionDescription").val(sectionDescription);
+
+                var editModal = new bootstrap.Modal(document.getElementById('editSectionModal'));
+                editModal.show();
+            });
+
+            $(document).on('click', '.delete-section-btn', function (e) {
+                e.preventDefault();
+                var sectionId = $(this).closest("li").data("sectionid");
+                $("#deleteSectionId").val(sectionId);
+
+                var deleteModal = new bootstrap.Modal(document.getElementById('deleteSectionModal'));
+                deleteModal.show();
+            });
+            $(document).on('click', '.btn-multiple-delete-submit', function (e) {
+
+                deleteModel.hide();
+            });
+
+
+            fetchTables(selectedSection, searchTerm, currentPage, rowsPerPage);
+            $('.section-link.active').find('.activePens').removeClass('d-none');
+            $('#TableAddModalID').prop('disabled', true);
+            if ($('.section-link.active').length > 0) {
+                selectedSectionName = $('.section-link.active').data('sectionname');
+                selectedSection = $('.section-link.active').data('sectionid');
+            }
+        });
+    </script>
+}

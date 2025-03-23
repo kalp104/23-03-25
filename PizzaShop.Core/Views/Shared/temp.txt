@@ -1,0 +1,381 @@
+<-----------------------------category partial script------------------------------>
+
+@* 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+@* modal script for category  
+<script>
+    $(document).ready(function () {
+        toastr.options.closeButton = true;
+        var selectedItemIds = []; // Persistent array to store selected IDs
+
+        // Handle Edit Button Click
+        $(".edit-category-button").click(function () {
+            var categoryId = $(this).data("category-id");
+            var categoryElement = $(`[data-category-id='${categoryId}']`);
+            var categoryName = categoryElement.data("category-name");
+            var categoryDescription = categoryElement.data("category-description");
+
+            $("#editCategoryId").val(categoryId);
+            $("#editCategoryName").val(categoryName);
+            $("#editCategoryDescription").val(categoryDescription);
+            $("#editCategoryModal").modal("show");
+        });
+
+        // Handle Delete Button Click
+        $(".delete-category-btn").click(function () {
+            let categoryId = $(this).data("category-id");
+            $("#deleteCategoryId").val(categoryId);
+            $("#deleteCategoryText").html("Are you sure you want to delete this category?");
+            $("#deleteCategoryModal").modal("show");
+        });
+
+        // Important variables
+        var rowsPerPage = 5; // Default items per page
+        var currentPage = 1;
+        var totalItems = @Model.TotalItems || 0;
+        var selectedCategory = null;
+        var searchTerm = '';
+
+        // Toggle custom dropdown visibility
+        $('#itemsPerPageBtn').on('click', function () {
+            var $menu = $('#itemsPerPageMenu');
+            $menu.toggle();
+        });
+
+        // Close dropdown when clicking outside
+        $(document).on('click', function (e) {
+            var $dropdown = $('.custom-dropdown');
+            if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0) {
+                $('#itemsPerPageMenu').hide();
+            }
+        });
+
+        // Handle page size selection
+        $(document).on('click', '.page-size-option', function (e) {
+            e.preventDefault();
+            var newSize = parseInt($(this).data('size'));
+            if (newSize !== rowsPerPage) {
+                rowsPerPage = newSize;
+                $('#itemsPerPageBtn').html(`${rowsPerPage} <span><i class="bi bi-arrow-down-short"></i></span>`);
+                currentPage = 1;
+                fetchItems(selectedCategory, searchTerm, currentPage, rowsPerPage);
+            }
+            $('#itemsPerPageMenu').hide();
+        });
+
+        // AJAX call fetch function
+        function fetchItems(categoryId, searchTerm = '', page, pageSize) {
+            $.ajax({
+                url: '@Url.Action("FilterItems", "Menu")',
+                type: 'GET',
+                data: { categoryId: categoryId, searchTerm: searchTerm, pageNumber: page, pageSize: pageSize },
+                success: function (data) {
+                    $('#collapse1').html(data);
+                    totalItems = parseInt($('#itemsContainer').attr('data-total-items')) || 0;
+                    updatePagination();
+                },
+                error: function () {
+                    alert('Error loading items.');
+                }
+            });
+        }
+
+        // Pagination update function
+        function updatePagination() {
+            var totalPages = Math.ceil(totalItems / rowsPerPage);
+            var startItem = (currentPage - 1) * rowsPerPage + 1;
+            var endItem = Math.min(currentPage * rowsPerPage, totalItems);
+            $("#pagination-info").text(`Showing ${startItem}-${endItem} of ${totalItems}`);
+            $("#prevPage").toggleClass("disabled", currentPage === 1);
+            $("#nextPage").toggleClass("disabled", currentPage >= totalPages);
+        }
+
+        // Pagination controls
+        $(document).on('click', '#prevPage', function (e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                currentPage--;
+                fetchItems(selectedCategory, searchTerm, currentPage, rowsPerPage);
+            }
+        });
+
+        $(document).on('click', '#nextPage', function (e) {
+            e.preventDefault();
+            if (currentPage * rowsPerPage < totalItems) {
+                currentPage++;
+                fetchItems(selectedCategory, searchTerm, currentPage, rowsPerPage);
+            }
+        });
+
+        $(document).on('click', '.category-link', function (e) {
+            e.preventDefault();
+            $(".category-link").removeClass("active");
+            $(this).addClass("active");
+            selectedCategory = $(this).data('category-id');
+            currentPage = 1;
+            fetchItems(selectedCategory, searchTerm, currentPage, rowsPerPage);
+        });
+
+        $(document).on('input', '#searchInput', function () {
+            searchTerm = $(this).val().trim();
+            currentPage = 1;
+            fetchItems(selectedCategory, searchTerm, currentPage, rowsPerPage);
+        });
+
+        // Select/Deselect all checkboxes
+        $('#selectAllCheckbox').on('click', function () {
+            var isChecked = this.checked;
+            $('.item-checkbox').prop('checked', isChecked);
+            var currentPageIds = $('.item-checkbox').map(function () {
+                return $(this).val();
+            }).get();
+
+            if (isChecked) {
+                currentPageIds.forEach(function (id) {
+                    if (!selectedItemIds.includes(id)) {
+                        selectedItemIds.push(id);
+                    }
+                });
+            } else {
+                selectedItemIds = selectedItemIds.filter(id => !currentPageIds.includes(id));
+            }
+            $('#deleteItems').prop('disabled', selectedItemIds.length === 0);
+        });
+
+        // Individual checkbox selection
+        $(document).on('click', '.item-checkbox', function () {
+            var itemId = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!selectedItemIds.includes(itemId)) {
+                    selectedItemIds.push(itemId);
+                }
+            } else {
+                selectedItemIds = selectedItemIds.filter(id => id !== itemId);
+            }
+            $('#selectAllCheckbox').prop('checked', $('.item-checkbox').length === $('.item-checkbox:checked').length);
+            $('#deleteItems').prop('disabled', selectedItemIds.length === 0);
+        });
+
+        // Multiple delete button
+        $('#deleteItems').on('click', function (e) {
+            e.preventDefault();
+            if (!$(this).prop('disabled')) {
+                $('#exampleModal3').modal('show');
+            }
+        });
+
+        // Populate selected item IDs in the multiple delete modal
+        $('#exampleModal3').on('show.bs.modal', function () {
+            $('#selectedItemIds').val(selectedItemIds.join(','));
+            console.log("Selected Item IDs for Multiple Delete:", selectedItemIds); // Debug
+        });
+
+        // Handle "No" button click to clear selections
+        $('#cancelMultipleDelete').on('click', function () {
+            selectedItemIds = []; // Clear the array
+            $('.item-checkbox').prop('checked', false); // Uncheck all checkboxes
+            $('#selectAllCheckbox').prop('checked', false);
+            $('#deleteItems').prop('disabled', true);
+            $('#exampleModal3').modal('hide');
+        });
+
+        // Initial fetch
+        fetchItems(selectedCategory, searchTerm, currentPage, rowsPerPage);
+    });
+</script> *@
+
+
+<-------------------modifier group partial------------------------>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        toastr.options.closeButton = true;
+        // Handle Delete Button Click
+        $(".delete-modifier-group-btn").click(function () {
+            let modifierId = $(this).data("modifier-group-id");
+
+            $("#deleteModifierGroupId").val(modifierId);
+            @* $("#deleteCategoryText").html("Are you sure you want to delete this category?"); *@
+
+                $("#delteModifierGroupModal").modal("show");
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        var rowsPerPageMain = 5;
+        var currentPageMain = 1;
+        var totalItemsMain = @Model.TotalItems1 || 0;
+        var selectedCategoryMain = null;
+        var searchTermMain = '';
+        var selectedModifierIdsMain = [];
+
+        // Toggle custom dropdown visibility
+        $('#itemsPerPageBtnMain').on('click', function () {
+            var $menu = $('#itemsPerPageMenuMain');
+            $menu.toggle(); // Show/hide the dropdown
+        });
+
+        // Close dropdown when clicking outside
+        $(document).on('click', function (e) {
+            var $dropdown = $('.custom-dropdown');
+            if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0) {
+                $('#itemsPerPageMenuMain').hide();
+            }
+        });
+
+        // Handle page size selection
+        $(document).on('click', '.page-size-option', function (e) {
+            e.preventDefault();
+            var newSize = parseInt($(this).data('size'));
+            if (newSize !== rowsPerPageMain) {
+                rowsPerPageMain = newSize;
+                $('#itemsPerPageBtnMain').html(`${rowsPerPageMain} <span><i class="bi bi-arrow-down-short"></i></span>`);
+                currentPageMain = 1;
+                fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
+            }
+            $('#itemsPerPageMenuMain').hide(); // Hide dropdown after selection
+        });
+
+        // AJAX fetch function for main view
+        function fetchModifiersMain(modifierGroupId, searchTerm = '', page, pageSize) {
+            $.ajax({
+                url: '@Url.Action("FilterModifiers", "Menu")',
+                type: 'GET',
+                data: { modifierGroupId: modifierGroupId, searchTerm: searchTerm, pageNumber: page, pageSize: pageSize },
+                success: function (data) {
+                    $('#collapse2').html(data);
+                    totalItemsMain = parseInt($('#ModifiersContainer').attr('data-total-modifiers')) || 0;
+                    updatePaginationMain();
+                    restoreCheckboxSelectionsMain();
+                    updateDeleteButtonStateMain();
+                },
+                error: function () {
+                    console.error('Error loading modifiers in main view.');
+                    alert('Error loading modifiers.');
+                }
+            });
+        }
+
+        // Pagination update for main view
+        function updatePaginationMain() {
+            var totalPages = Math.ceil(totalItemsMain / rowsPerPageMain);
+            var startItem = (currentPageMain - 1) * rowsPerPageMain + 1;
+            var endItem = Math.min(currentPageMain * rowsPerPageMain, totalItemsMain);
+            $("#pagination-info-main").text(`Showing ${startItem}-${endItem} of ${totalItemsMain}`);
+            $("#prevPageMain").toggleClass("disabled", currentPageMain === 1);
+            $("#nextPageMain").toggleClass("disabled", currentPageMain >= totalPages);
+        }
+
+        // Restore checkbox selections for main view
+        function restoreCheckboxSelectionsMain() {
+            $('.item-checkbox').each(function () {
+                var modifierId = $(this).val();
+                if (selectedModifierIdsMain.includes(modifierId)) {
+                    $(this).prop('checked', true);
+                }
+            });
+            $('#selectAllCheckbox').prop('checked', $('.item-checkbox').length === $('.item-checkbox:checked').length);
+        }
+
+        // Update delete button state for main view
+        function updateDeleteButtonStateMain() {
+            $('#deleteModifiers').prop('disabled', selectedModifierIdsMain.length === 0);
+        }
+
+        // Pagination controls for main view
+        $(document).on('click', '#prevPageMain', function (e) {
+            e.preventDefault();
+            if (currentPageMain > 1) {
+                currentPageMain--;
+                fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
+            }
+        });
+
+        $(document).on('click', '#nextPageMain', function (e) {
+            e.preventDefault();
+            if (currentPageMain * rowsPerPageMain < totalItemsMain) {
+                currentPageMain++;
+                fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
+            }
+        });
+
+        $(document).on('click', '.modifierGroup-link', function (e) {
+            e.preventDefault();
+            $(".modifierGroup-link").removeClass("active");
+            $(this).addClass("active");
+            selectedCategoryMain = $(this).data('modifier-group-id') || $(this).attr('data-modifier-group-id');
+            currentPageMain = 1;
+            fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
+        });
+
+        $(document).on('input', '#searchInput', function () {
+            searchTermMain = $(this).val().trim();
+            currentPageMain = 1;
+            fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
+        });
+
+        // Select/Deselect all checkboxes
+        $(document).on('click', '#selectAllCheckbox', function () {
+            var isChecked = this.checked;
+            $('.item-checkbox').prop('checked', isChecked);
+            var currentPageIds = $('.item-checkbox').map(function () {
+                return $(this).val();
+            }).get();
+
+            if (isChecked) {
+                currentPageIds.forEach(function (id) {
+                    if (!selectedModifierIdsMain.includes(id)) {
+                        selectedModifierIdsMain.push(id);
+                    }
+                });
+            } else {
+                selectedModifierIdsMain = selectedModifierIdsMain.filter(id => !currentPageIds.includes(id));
+            }
+            updateDeleteButtonStateMain();
+        });
+
+        // Individual checkbox selection
+        $(document).on('click', '.item-checkbox', function () {
+            var modifierId = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!selectedModifierIdsMain.includes(modifierId)) {
+                    selectedModifierIdsMain.push(modifierId);
+                }
+            } else {
+                selectedModifierIdsMain = selectedModifierIdsMain.filter(id => id !== modifierId);
+            }
+            $('#selectAllCheckbox').prop('checked', $('.item-checkbox').length === $('.item-checkbox:checked').length);
+            updateDeleteButtonStateMain();
+        });
+
+        // Populate selected modifier IDs in the modal
+        $(document).on('click', '#deleteModifiers', function (e) {
+            if (!$(this).prop('disabled')) {
+                $('#selectedModifierIds').val(selectedModifierIdsMain.join(','));
+                $('#exampleModal4').modal('show');
+            }
+        });
+
+        $('#exampleModal4').on('show.bs.modal', function () {
+            $('#selectedModifierIds').val(selectedModifierIdsMain.join(','));
+        });
+
+        // Delete button handler
+        $(".delete-modifier-group-btn").click(function () {
+            let modifierId = $(this).data("modifier-group-id");
+            $("#deleteModifierGroupId").val(modifierId);
+            $("#deleteModifierGroupModal").modal("show");
+        });
+
+        // Initial fetch
+        fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
+    });
+</script>
