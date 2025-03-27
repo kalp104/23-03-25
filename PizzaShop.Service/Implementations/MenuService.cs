@@ -267,7 +267,7 @@ public class MenuService : IMenuService
             await _items.UpdateAsync(item);
         }
     }
-    public async Task DeleteModifierService(int userid, int modifierid)
+    public async Task DeleteModifierService( int modifierid, int userid)
     {
         Modifier? item = await _modifier.GetByIdAsync(modifierid);
         if (item != null)

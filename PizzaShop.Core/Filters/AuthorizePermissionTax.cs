@@ -23,7 +23,7 @@ public class AuthorizePermissionTax : ActionFilterAttribute
         {
             foreach (var i in rolefilter)
             {
-                if (i.PermissionId == 4 && i.Canview == false)
+                if (i.PermissionId == 5 && i.Canview == false)
                 {
                     context.Result = new RedirectToActionResult("Privacy", "Home", null);
                     return;

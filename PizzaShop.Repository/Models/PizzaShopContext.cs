@@ -23,6 +23,8 @@ public partial class PizzaShopContext : DbContext
 
     public virtual DbSet<Country> Countries { get; set; }
 
+    public virtual DbSet<Customer> Customers { get; set; }
+
     public virtual DbSet<Image> Images { get; set; }
 
     public virtual DbSet<Item> Items { get; set; }
@@ -35,6 +37,10 @@ public partial class PizzaShopContext : DbContext
 
     public virtual DbSet<Modifiergroup> Modifiergroups { get; set; }
 
+    public virtual DbSet<Order> Orders { get; set; }
+
+    public virtual DbSet<OrdersCustomersMapping> OrdersCustomersMappings { get; set; }
+
     public virtual DbSet<Permission> Permissions { get; set; }
 
     public virtual DbSet<PermissionsRole> PermissionsRoles { get; set; }
@@ -46,6 +52,8 @@ public partial class PizzaShopContext : DbContext
     public virtual DbSet<State> States { get; set; }
 
     public virtual DbSet<Table> Tables { get; set; }
+
+    public virtual DbSet<TaxAndFee> TaxAndFees { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -154,6 +162,44 @@ public partial class PizzaShopContext : DbContext
             entity.Property(e => e.Countryname)
                 .HasMaxLength(50)
                 .HasColumnName("countryname");
+        });
+
+        modelBuilder.Entity<Customer>(entity =>
+        {
+            entity.HasKey(e => e.Customerid).HasName("customers_pkey");
+
+            entity.ToTable("customers");
+
+            entity.Property(e => e.Customerid).HasColumnName("customerid");
+            entity.Property(e => e.Createdat)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdat");
+            entity.Property(e => e.Createdbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("createdbyid");
+            entity.Property(e => e.Customeremail)
+                .HasMaxLength(100)
+                .HasColumnName("customeremail");
+            entity.Property(e => e.Customername)
+                .HasMaxLength(100)
+                .HasColumnName("customername");
+            entity.Property(e => e.Customerphone).HasColumnName("customerphone");
+            entity.Property(e => e.Deletedat)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("deletedat");
+            entity.Property(e => e.Deletedbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("deletedbyid");
+            entity.Property(e => e.Editedat)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("editedat");
+            entity.Property(e => e.Editedbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("editedbyid");
+            entity.Property(e => e.Isdeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("isdeleted");
         });
 
         modelBuilder.Entity<Image>(entity =>
@@ -382,6 +428,83 @@ public partial class PizzaShopContext : DbContext
                 .HasColumnName("modifiergroupname");
         });
 
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.HasKey(e => e.Orderid).HasName("orders_pkey");
+
+            entity.ToTable("orders");
+
+            entity.Property(e => e.Orderid).HasColumnName("orderid");
+            entity.Property(e => e.Createdat)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdat");
+            entity.Property(e => e.Createdbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("createdbyid");
+            entity.Property(e => e.Deletedat)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("deletedat");
+            entity.Property(e => e.Deletedbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("deletedbyid");
+            entity.Property(e => e.Editedat)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("editedat");
+            entity.Property(e => e.Editedbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("editedbyid");
+            entity.Property(e => e.Isdeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("isdeleted");
+            entity.Property(e => e.Orderdescription)
+                .HasMaxLength(255)
+                .HasColumnName("orderdescription");
+            entity.Property(e => e.Paymentmode).HasColumnName("paymentmode");
+            entity.Property(e => e.Ratings)
+                .HasDefaultValueSql("0")
+                .HasColumnName("ratings");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.Totalamount).HasColumnName("totalamount");
+            entity.Property(e => e.Totalpersons)
+                .HasDefaultValue(1)
+                .HasColumnName("totalpersons");
+        });
+
+        modelBuilder.Entity<OrdersCustomersMapping>(entity =>
+        {
+            entity.HasKey(e => e.OrderCustomerMappingId).HasName("orders_customers_mapping_pkey");
+
+            entity.ToTable("orders_customers_mapping");
+
+            entity.Property(e => e.OrderCustomerMappingId).HasColumnName("order_customer_mapping_id");
+            entity.Property(e => e.Createdat)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdat");
+            entity.Property(e => e.Createdbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("createdbyid");
+            entity.Property(e => e.Customerid).HasColumnName("customerid");
+            entity.Property(e => e.Editedat)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("editedat");
+            entity.Property(e => e.Editedbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("editedbyid");
+            entity.Property(e => e.Orderid).HasColumnName("orderid");
+
+            entity.HasOne(d => d.Customer).WithMany(p => p.OrdersCustomersMappings)
+                .HasForeignKey(d => d.Customerid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("orders_customers_mapping_customerid_fkey");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.OrdersCustomersMappings)
+                .HasForeignKey(d => d.Orderid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("orders_customers_mapping_orderid_fkey");
+        });
+
         modelBuilder.Entity<Permission>(entity =>
         {
             entity.HasKey(e => e.Permissionid).HasName("permissions_pkey");
@@ -525,7 +648,9 @@ public partial class PizzaShopContext : DbContext
             entity.Property(e => e.Editedbyid)
                 .HasDefaultValue(0)
                 .HasColumnName("editedbyid");
-            entity.Property(e => e.Isdeleted).HasColumnName("isdeleted");
+            entity.Property(e => e.Isdeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("isdeleted");
             entity.Property(e => e.Sectionid).HasColumnName("sectionid");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.Tablename)
@@ -536,6 +661,48 @@ public partial class PizzaShopContext : DbContext
                 .HasForeignKey(d => d.Sectionid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("tables_sectionid_fkey");
+        });
+
+        modelBuilder.Entity<TaxAndFee>(entity =>
+        {
+            entity.HasKey(e => e.Taxid).HasName("tax_and_fees_pkey");
+
+            entity.ToTable("tax_and_fees");
+
+            entity.Property(e => e.Taxid).HasColumnName("taxid");
+            entity.Property(e => e.Createdat)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdat");
+            entity.Property(e => e.Createdbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("createdbyid");
+            entity.Property(e => e.Deletedat)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("deletedat");
+            entity.Property(e => e.Deletedbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("deletedbyid");
+            entity.Property(e => e.Editedat)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("editedat");
+            entity.Property(e => e.Editedbyid)
+                .HasDefaultValue(0)
+                .HasColumnName("editedbyid");
+            entity.Property(e => e.Isdefault)
+                .HasDefaultValue(false)
+                .HasColumnName("isdefault");
+            entity.Property(e => e.Isdeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("isdeleted");
+            entity.Property(e => e.Isenabled)
+                .HasDefaultValue(false)
+                .HasColumnName("isenabled");
+            entity.Property(e => e.Taxamount).HasColumnName("taxamount");
+            entity.Property(e => e.Taxname)
+                .HasMaxLength(100)
+                .HasColumnName("taxname");
+            entity.Property(e => e.Taxtype).HasColumnName("taxtype");
         });
 
         modelBuilder.Entity<User>(entity =>

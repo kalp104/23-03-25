@@ -45,4 +45,6 @@ public class ItemsViewModel
 
     // File upload (not part of the Item model, handled separately in the controller)
     public IFormFile? UploadFiles { get; set; }
+
+    public string? ImageUrl {get; set;}
 }

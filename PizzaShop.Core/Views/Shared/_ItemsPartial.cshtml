@@ -9,7 +9,7 @@
         <table class="table text-nowrap">
             <thead>
                 <tr>
-                    <th><input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox"></th>
+                    <th><input class="form-check-input" type="checkbox" id="selectAllItemsCheckbox"></th>
                     <th>Name</th>
                     <th>Item Type</th>
                     <th>Rate</th>
@@ -22,8 +22,7 @@
                 @foreach (var i in Model.Items)
                 {
                     <tr>
-                        <td><input class="form-check-input item-checkbox" type="checkbox" name="selectedItemIds"
-                                value="@i.Itemid" data-item-id="@i.Itemid"></td>
+                        <td><input class="form-check-input item-checkbox" type="checkbox" value="@i.Itemid" data-name="@i.Itemname"></td>
                         <td>
                             @if (string.IsNullOrEmpty(i.Imageid) || i.Imageid == "default")
                             {
@@ -56,19 +55,20 @@
                             </div>
                         </td>
                         <td>
-                            @if (canEdit == true)
+                           
+                            @if (canEdit)
                             {
-                                <a href="#" class="edit-item-link" data-item-id="@i.Itemid" data-bs-toggle="modal" data-bs-target="#editItemModal">
+                                <a class="edit-item-link" data-bs-toggle="modal" data-bs-target="#editItemModal" data-item-id="@i.Itemid">
                                     <i class="bi bi-pen"></i>
                                 </a>
                             }
-                            @if (canDelete == true)
+                            @if (canDelete)
                             {
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#ItemDeleteModal" data-item-id="@i.Itemid"
-                                    class="delete-item-link">
+                                <a class="delete-item-link" data-bs-toggle="modal" data-bs-target="#ItemDeleteModal" data-item-id="@i.Itemid">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             }
+                        
                         </td>
                     </tr>
                 }
@@ -190,12 +190,12 @@
                         $("#ItemEditModal").modal("hide");
                         location.reload();
                     } else {
-                        alert(response.message);
+                        console.log(response.message);
                         $("#modalContent").html(response);
                     }
                 },
                 error: function () {
-                    alert("Error updating item.");
+                    console.log("Error updating item.");
                 }
             });
         });

@@ -10,7 +10,7 @@
         <table class="table text-nowrap">
             <thead>
                 <tr>
-                    <th><input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox"></th>
+                    <th><input class="form-check-input" type="checkbox" id="selectAllModifiersCheckbox"></th>
                     <th>Name</th>
                     <th>Unit</th>
                     <th>Rate</th>
@@ -22,7 +22,7 @@
                 @foreach (var i in Model.Modifiers)
                 {
                     <tr>
-                        <td><input class="form-check-input item-checkbox" type="checkbox" name="selectedModifierIds"
+                        <td><input class="form-check-input main-item-checkbox" type="checkbox" name="selectedModifierIds"
                                 value="@i.Modifierid" data-name="@i.Modifiername"></td>
                         <td>@i.Modifiername</td>
                         <td>@i.Modifierunit</td>
@@ -35,7 +35,7 @@
                             {
                                 <a class="edit-modifier-link bg-white" data-bs-toggle="modal" data-bs-target="#editModal-Modifier"
                                     data-modifier-id="@i.Modifierid">
-                                    <i class="bi bi-pen "></i>
+                                    <i class="bi bi-pen"></i>
                                 </a>
                             }
                             @if (canDelete)
@@ -87,10 +87,15 @@
                 <input type="hidden" name="Userid" value="@ViewBag.Userid" />
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-6 mb-3 border border rounded ">
-                            <label class="form-label "
-                                style="font-size: 14px; margin-bottom: 0px; margin-top: 6px;">Modifier Groups</label>
-                            <div class="checkbox-container" style="height:100px; overflow-y: scroll;">
+                        <div class="col-6 mb-3 position-relative ">
+                            <button
+                                class="btn border border rounded p-3 w-100 d-flex justify-content-between align-items-center"
+                                type="button" id="toggleModifiersGroupEdit">
+                                Modifier Groups <i class="bi bi-chevron-down"></i>
+                            </button>
+                            <div class="checkbox-container position-absolute shadow-lg modifierGroup-container border rounded bg-white mt-3 p-3"
+                                id="modifierGroupContainerEdit"
+                                style="z-index: 1000; width: -webkit-fill-available; margin-right: 14px;">
                                 @if (Model.modifiergroups != null && Model.modifiergroups.Any())
                                 {
                                     @foreach (var c in Model.modifiergroups)
@@ -233,7 +238,15 @@
 
 @*  Scripts *@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
@@ -339,6 +352,15 @@
             // Setting my hidden input value
             $('#deleteModifierId').val(modifierId);
         });
+
+        $("#modifierGroupContainerEdit").hide();
+        // Toggle modifier container visibility
+        $("#toggleModifiersGroupEdit").click(function () {
+            $("#modifierGroupContainerEdit").slideToggle("fast");
+        });
+
+
+
     });
 
 

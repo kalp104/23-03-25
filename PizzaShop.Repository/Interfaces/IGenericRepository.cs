@@ -39,4 +39,7 @@ public interface IGenericRepository<T> where T : class
     Task<List<Table>> GetTableBySectionIdAsync(int? id);
 
 
+    // orders 
+    Task<List<OrderCutstomerViewModel>?> GetAllCustomerOrderMappingAsync();
+    Task<OrderDetailsHelperViewModel?> GetOrderDetailsByOrderId(int orderId);
 }

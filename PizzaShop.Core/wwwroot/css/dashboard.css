@@ -6,8 +6,35 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Roboto";
-
 }
+
+.custom-user-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0; /* Aligns to the right of the button; adjust as needed */
+  z-index: 1000;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  list-style: none;
+}
+
+.user-dropdown-menu .dropdown-item {
+  display: block;
+  padding: 3px 20px;
+  color: #333;
+  text-decoration: none;
+}
+
 
 .custom-dropdown {
   position: relative;
@@ -54,10 +81,13 @@
 }
 
 .modal-backdrop {
-  background-color: rgba(0, 0, 0, 0.5) !important; /* Adjust opacity here (0.2 = 20% opacity) */
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ) !important; /* Adjust opacity here (0.2 = 20% opacity) */
 }
-
-
 
 .links.active {
   background-color: #0565a6 !important;
@@ -106,6 +136,7 @@ a {
 .search_bar {
   padding-left: 10px;
   height: 40px;
+  width: 100%;
   text-decoration: none;
   border: none;
 }
@@ -148,7 +179,7 @@ ul {
   padding-left: 0px !important;
 }
 
-.row>* {
+.row > * {
   padding-right: 0px !important;
   padding-left: 0px !important;
 }
@@ -243,7 +274,7 @@ ul {
   border-radius: 20px;
 }
 
-.row>* {
+.row > * {
   padding-right: calc(var(--bs-gutter-x) * 0.5) !important;
   padding-left: calc(var(--bs-gutter-x) * 0.5) !important;
   margin-top: var(--bs-gutter-x);
@@ -468,6 +499,10 @@ h3 {
     overflow-x: scroll;
   }
 
+  #TaxContainer {
+    overflow-x: scroll;
+  }
+
   #buttonContent {
     display: none;
   }
@@ -478,7 +513,9 @@ h3 {
     display: flex !important;
     flex-direction: column !important;
   }
-
+  .orderContainer {
+    overflow-x: scroll;
+  }
   .rightsideborder {
     flex-direction: column;
     border-right: none;
@@ -561,8 +598,7 @@ input[type="file"] {
   margin-left: 0.05rem !important;
 }
 
-
-.AddItemBox .form-floating>label {
+.AddItemBox .form-floating > label {
   left: 0.8rem;
 }
 
@@ -579,6 +615,15 @@ input[type="file"] {
   background-color: rgba(245, 221, 141, 0.349);
 }
 
+/* .datesInput.form-floating>.form-control, .form-floating>.form-select {
+  height: calc(2.6rem + 2px) !important;
+  line-height: 1.25;
+}
+
+.datesInput.form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label {
+  opacity: .65;
+  transform: scale(.75) translateY(-0.9rem) translateX(.15rem) !important;
+} */
 
 /* =================toasters----------------------- */
 /* 

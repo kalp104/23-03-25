@@ -30,8 +30,6 @@ public class SectionsHelperViewModel
     [MaxLength(250, ErrorMessage = "description limit exceed ")]
     public string? Sectiondescription { get; set; }
 
-
-
     [Required(ErrorMessage = "Table name is required")]
     [MaxLength(40, ErrorMessage = "Name limit exceed ")]
     public string? Tablename { get; set; }

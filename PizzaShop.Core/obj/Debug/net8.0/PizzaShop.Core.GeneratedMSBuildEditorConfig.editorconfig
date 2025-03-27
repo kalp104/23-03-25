@@ -46,6 +46,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[F:/23-03-25/PizzaShop.Core/Views/Order/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[F:/23-03-25/PizzaShop.Core/Views/Order/OrderDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcT3JkZXJEZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[F:/23-03-25/PizzaShop.Core/Views/Order/_OrderPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcX09yZGVyUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [F:/23-03-25/PizzaShop.Core/Views/Role/Permission.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9sZVxQZXJtaXNzaW9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -132,6 +144,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [F:/23-03-25/PizzaShop.Core/Views/Tax/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGF4XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[F:/23-03-25/PizzaShop.Core/Views/Tax/_TaxPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGF4XF9UYXhQYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [F:/23-03-25/PizzaShop.Core/Views/Users/AccountManager.cshtml]

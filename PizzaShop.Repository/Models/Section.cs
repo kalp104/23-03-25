@@ -26,9 +26,4 @@ public partial class Section
     public int? Deletedbyid { get; set; }
 
     public virtual ICollection<Table> Tables { get; set; } = new List<Table>();
-
-    public object OrderBy(Func<object, object> value)
-    {
-        throw new NotImplementedException();
-    }
 }

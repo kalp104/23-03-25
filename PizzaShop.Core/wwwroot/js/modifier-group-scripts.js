@@ -1,14 +1,13 @@
-// modifier-group-scripts.js
 $(document).ready(function () {
     toastr.options.closeButton = true;
 
-    // Variables to be set from the view
+    // Variables for modifier group view
     var rowsPerPageMain = 5;
     var currentPageMain = 1;
     var totalItemsMain = window.totalItemsMain || 0; // Passed from the view
     var selectedCategoryMain = null;
     var searchTermMain = '';
-    var selectedModifierIdsMain = [];
+    var selectedModifierIdsMain = []; // Array to store selected modifier IDs
     var filterModifiersUrl = window.filterModifiersUrl || ''; // Passed from the view
 
     // Toggle custom dropdown visibility
@@ -31,14 +30,14 @@ $(document).ready(function () {
         var newSize = parseInt($(this).data('size'));
         if (newSize !== rowsPerPageMain) {
             rowsPerPageMain = newSize;
-            $('#itemsPerPageBtnMain').html(`${rowsPerPageMain} <span><i class="bi bi-arrow-down-short"></i></span>`);
+            $('#itemsPerPageBtnMain').html(`${rowsPerPageMain} <span><i class="bi bi-chevron-down"></i></span>`);
             currentPageMain = 1;
             fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
         }
         $('#itemsPerPageMenuMain').hide();
     });
 
-    // AJAX fetch function for main view
+    // AJAX fetch function for modifiers
     function fetchModifiersMain(modifierGroupId, searchTerm = '', page, pageSize) {
         $.ajax({
             url: filterModifiersUrl,
@@ -68,15 +67,15 @@ $(document).ready(function () {
         $("#nextPageMain").toggleClass("disabled", currentPageMain >= totalPages);
     }
 
-    // Restore checkbox selections for main view
+    // Restore checkbox selections for main view (scoped to #collapse2)
     function restoreCheckboxSelectionsMain() {
-        $('.item-checkbox').each(function () {
+        $('#collapse2 .main-item-checkbox').each(function () {
             var modifierId = $(this).val();
-            if (selectedModifierIdsMain.includes(modifierId)) {
-                $(this).prop('checked', true);
-            }
+            var isSelected = selectedModifierIdsMain.includes(modifierId);
+            $(this).prop('checked', isSelected);
         });
-        $('#selectAllCheckbox').prop('checked', $('.item-checkbox').length === $('.item-checkbox:checked').length);
+        var $checkboxes = $('#collapse2 .main-item-checkbox');
+        $('#selectAllModifiersCheckbox').prop('checked', $checkboxes.length > 0 && $checkboxes.length === $checkboxes.filter(':checked').length);
     }
 
     // Update delete button state for main view
@@ -101,6 +100,7 @@ $(document).ready(function () {
         }
     });
 
+    // Modifier group link click handler
     $(document).on('click', '.modifierGroup-link', function (e) {
         e.preventDefault();
         $(".modifierGroup-link").removeClass("active");
@@ -110,25 +110,27 @@ $(document).ready(function () {
         fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
     });
 
+    // Search input handler
     $(document).on('input', '#searchInput', function () {
         searchTermMain = $(this).val().trim();
         currentPageMain = 1;
         fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
     });
 
+    // Show all modifiers (no specific group)
     $(document).on('click', '.modifierGroupPartialAll', function (e) {
         e.preventDefault();
         $(".modifierGroup-link").removeClass("active");
         currentPageMain = 1;
         selectedCategoryMain = null;
-        fetchModifiersMain(selectedCategoryMain,searchTermMain, currentPageMain, rowsPerPageMain);
+        fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
     });
 
-    // Select/Deselect all checkboxes
-    $(document).on('click', '#selectAllCheckbox', function () {
-        var isChecked = this.checked;
-        $('.item-checkbox').prop('checked', isChecked);
-        var currentPageIds = $('.item-checkbox').map(function () {
+    // Select/Deselect all checkboxes (scoped to #collapse2)
+    $(document).on('change', '#collapse2 #selectAllModifiersCheckbox', function () {
+        var isChecked = $(this).is(':checked');
+        $('#collapse2 .main-item-checkbox').prop('checked', isChecked);
+        var currentPageIds = $('#collapse2 .main-item-checkbox').map(function () {
             return $(this).val();
         }).get();
 
@@ -144,8 +146,8 @@ $(document).ready(function () {
         updateDeleteButtonStateMain();
     });
 
-    // Individual checkbox selection
-    $(document).on('click', '.item-checkbox', function () {
+    // Individual checkbox selection (scoped to #collapse2)
+    $(document).on('change', '#collapse2 .main-item-checkbox', function () {
         var modifierId = $(this).val();
         if ($(this).is(':checked')) {
             if (!selectedModifierIdsMain.includes(modifierId)) {
@@ -154,27 +156,67 @@ $(document).ready(function () {
         } else {
             selectedModifierIdsMain = selectedModifierIdsMain.filter(id => id !== modifierId);
         }
-        $('#selectAllCheckbox').prop('checked', $('.item-checkbox').length === $('.item-checkbox:checked').length);
+        var $checkboxes = $('#collapse2 .main-item-checkbox');
+        $('#selectAllModifiersCheckbox').prop('checked', $checkboxes.length > 0 && $checkboxes.length === $checkboxes.filter(':checked').length);
         updateDeleteButtonStateMain();
     });
 
-    // Populate selected modifier IDs in the modal
+    // Delete button click handler
     $(document).on('click', '#deleteModifiers', function (e) {
-        if (!$(this).prop('disabled')) {
+        e.preventDefault();
+        if (!$(this).prop('disabled') && selectedModifierIdsMain.length > 0) {
             $('#selectedModifierIds').val(selectedModifierIdsMain.join(','));
             $('#exampleModal4').modal('show');
         }
     });
 
+    // Populate selected modifier IDs in the modal before showing
     $('#exampleModal4').on('show.bs.modal', function () {
         $('#selectedModifierIds').val(selectedModifierIdsMain.join(','));
     });
 
-    // Delete button handler
-    $(".delete-modifier-group-btn").click(function () {
+   // Handle multiple delete form submission
+    $('#deleteMultipleModifiersForm').on('submit', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: '/Menu/DeleteMultipleModifiers',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (response) {
+                console.log('Delete Response:', response); // Debug the response
+                if (response && response.success) {
+                    // Hide the modal
+                    $('#exampleModal4').modal('hide');
+
+                    // Clear selections and refresh the list immediately
+                    selectedModifierIdsMain = [];
+                    fetchModifiersMain(selectedCategoryMain, searchTermMain, currentPageMain, rowsPerPageMain);
+                    
+                    // Forcefully remove backdrop and reset body state after a short delay
+                    setTimeout(function () {
+                        $('.modal-backdrop').remove();
+                        $('body').removeClass('modal-open').css('overflow', '');
+                        location.reload();
+                    }, 600); // 300ms delay to match Bootstrap’s default fade animation
+
+                    toastr.success(response.message || 'Modifiers deleted successfully.');
+                } else {
+                    toastr.error(response?.message || 'Error deleting modifiers.');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error deleting modifiers:', status, error);
+                toastr.error('Error submitting delete request.');
+            }
+        });
+    });
+
+    // Delete single modifier group button handler
+    $(document).on('click', '.delete-modifier-group-btn', function () {
         let modifierId = $(this).data("modifier-group-id");
         $("#deleteModifierGroupId").val(modifierId);
-        $("#delteModifierGroupModal").modal("show"); // Note: Fixed typo in modal ID
+        $("#delteModifierGroupModal").modal("show");
     });
 
     // Initial fetch

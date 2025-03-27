@@ -26,7 +26,7 @@ public interface IMenuService
     Task<Item> IsAvailabeUpdateAsync(int id,bool available, int userid);
     Task DeleteMultipleItemsAsync(List<int>? itemIds, int userId);
     Task DeleteMultipleModifiersAsync(List<int>? modifierIds, int userId);
-    Task DeleteModifierService(int userid, int modifierid);
+    Task DeleteModifierService(int modifierid,int Userid);
 
 
     Task<Modifier?> GetModifierByIdAsync(int modifierId);

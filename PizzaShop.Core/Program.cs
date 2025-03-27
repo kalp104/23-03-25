@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PizzaShop.Core.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.ComponentModel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,11 @@ builder.Services.AddScoped<IUserTableService, UserTableService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<ISectionService, SectionService>();
+builder.Services.AddScoped<ITaxService, TaxService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+//excel
+OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
 // Filters
 builder.Services.AddScoped<AuthorizePermissionUserTable>();
@@ -34,6 +40,7 @@ builder.Services.AddScoped<AuthorizePermissionRoles>();
 builder.Services.AddScoped<AuthorizePermissionMenu>();
 builder.Services.AddScoped<AuthorizePermissionSections>();
 builder.Services.AddScoped<AuthorizePermissionTax>();
+builder.Services.AddScoped<AuthorizePermissionOrders>();
 
 // Connection string + dependency injection
 builder.Services.AddDbContext<PizzaShopContext>(options =>

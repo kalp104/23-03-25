@@ -232,7 +232,7 @@ public class MenuController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddModifier(MenuWithItemsViewModel viewModel)
     {
-        if (viewModel.modifiersViewModel == null )
+        if (viewModel.modifiersViewModel == null)
         {
             MenuWithItemsViewModel menu2 = await _menuService.GetModifiers(0, "", 1, 5);
             menu2.modifiersViewModel = viewModel.modifiersViewModel;
@@ -289,34 +289,30 @@ public class MenuController : Controller
     {
         if (string.IsNullOrEmpty(selectedItemIds))
         {
-            TempData["ErrorMessage"] = "No items selected for deletion.";
-            return RedirectToAction("Index");
+            return Json(new { success = false, message = "No items selected for deletion." });
         }
 
         try
         {
             // Parse the comma-separated string into an array of integers
-            List<int>? itemsIds = selectedItemIds.Split(',')
+            List<int> itemsIds = selectedItemIds.Split(',')
                 .Select(id => int.Parse(id))
                 .ToList();
 
             if (!itemsIds.Any())
             {
-                TempData["ErrorMessage"] = "Invalid item IDs provided.";
-                return RedirectToAction("Index");
+                return Json(new { success = false, message = "Invalid item IDs provided." });
             }
 
             await FetchData();
-            int userId = ViewBag.Userid;
+            int userId = ViewBag.Userid; // Ensure this is set correctly (e.g., from session or claims)
             await _menuService.DeleteMultipleItemsAsync(itemsIds, userId);
-            TempData["SuccessMessage"] = "Selected items deleted successfully!";
+            return Json(new { success = true, message = "Selected items deleted successfully!" });
         }
         catch (Exception ex)
         {
-            TempData["ErrorMessage"] = $"Failed to delete items: {ex.Message}";
+            return Json(new { success = false, message = $"Failed to delete items: {ex.Message}" });
         }
-
-        return RedirectToAction("Index");
     }
 
 
@@ -326,34 +322,30 @@ public class MenuController : Controller
     {
         if (string.IsNullOrEmpty(selectedModifierIds))
         {
-            TempData["ErrorMessage"] = "No modifiers selected for deletion.";
-            return RedirectToAction("Index");
+            return Json(new { success = false, message = "No modifiers selected for deletion." });
         }
 
         try
         {
-            List<int>? modifierIds = selectedModifierIds.Split(',')
+            List<int> modifierIds = selectedModifierIds.Split(',')
                 .Select(id => int.Parse(id))
                 .ToList();
 
             if (!modifierIds.Any())
             {
-                TempData["ErrorMessage"] = "Invalid modifier IDs provided.";
-                return RedirectToAction("Index");
+                return Json(new { success = false, message = "Invalid modifier IDs provided." });
             }
 
             await FetchData();
             int userId = ViewBag.Userid;
             await _menuService.DeleteMultipleModifiersAsync(modifierIds, userId);
-            TempData["SuccessMessage"] = "Selected modifiers deleted successfully!";
+            return Json(new { success = true, message = "Selected modifiers deleted successfully!" });
         }
         catch (Exception ex)
         {
-            TempData["ErrorMessage"] = $"Failed to delete modifiers: {ex.Message}";
+            return Json(new { success = false, message = $"Failed to delete modifiers: {ex.Message}" });
         }
-
-        return RedirectToAction("Index");
-    }
+    } 
 
 
 
@@ -534,7 +526,9 @@ public class MenuController : Controller
                 Defaulttax = (bool)item.DefaultTax,
                 Taxpercentage = item.Taxpercentage,
                 Shortcode = item.Shortcode,
-                Description = item.Description
+                Description = item.Description,
+                ImageUrl = item.Imageid
+
             },
             Categories = await _menuService.GetAllCategories(),
             modifiergroups = await _menuService.GetAllModifierGroup()
@@ -612,7 +606,7 @@ public class MenuController : Controller
             await _menuService.UpdateModifierGroupService(model);
 
             TempData["ModifierGroupEdit"] = "Modifier Group updated successfully";
-            return RedirectToAction("Index","Menu");
+            return RedirectToAction("Index", "Menu");
         }
         catch (Exception ex)
         {
@@ -621,4 +615,4 @@ public class MenuController : Controller
     }
 
 
-}       
+}

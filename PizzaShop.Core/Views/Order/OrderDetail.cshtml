@@ -1,0 +1,92 @@
+@using static PizzaShop.Repository.Helpers.Enums
+@model PizzaShop.Repository.ModelView.OrderDetailsHelperViewModel
+@{
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+    bool canEdit = ViewBag.permission[6].Canedit;
+    bool canDelete = ViewBag.permission[6].Candelete;
+}
+
+<div class="d-flex align-item-center justify-content-center w-100">
+    <div class="w-100">
+
+        <div class="pt-4 px-3 d-flex flex-row justify-content-between flex-sm-column flex-md-row flex-wrap">
+            <h3 class="text-blue">Order Details</h3>
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" asp-controller="Order"
+                    class=" text-decoration-none d-flex justify-content-center align-items-center p-2 border rounded text-black-50">
+                    &lt; <span class="spanClass text-black-50" id="buttonContent">Back</span>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="bg-white m-3 p-3 border rounded shadow-sm ">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex flex-column flex-md-row gap-2 text-nowrap">
+                    <h2>Order Summary</h2>
+                    <p class="btn btn-secondary text-white">@((OrderStatus)Model.Status)</p>
+                </div>
+
+                <a class="text-decoration-none bg-blue d-flex justify-content-center align-items-center px-4 rounded text-white"
+                    id="exportPdfBtn" data-order-id="@Model.Orderid" style="height: 40px;">
+                    <i class="bi bi-box-arrow-up-right px-1"></i>
+                    <span class="spanClass text-white d-none d-md-flex">Export</span>
+                </a>
+            </div>
+
+            <h6><b>Invoice Number :</b></h6>
+
+            <div class="d-flex gap-3">
+                <p><B>Paid on :</B> </p>
+                <p><B>Placed on :</B> @Model.Createdat</p>
+                <p><B>Modified on :</B> @Model.Editedat</p>
+                <p><B>Order Duration :</B> @Model.Editedat</p>
+            </div>
+        </div>
+
+
+        <div class="m-3 d-flex gap-3 ">
+            <div class="w-50 bg-white border rounded shadow-sm p-3 ">
+                <div class="d-flex justify-content-between">
+                    <h5><i class="bi bi-people-fill"></i> Customer Details </h5>
+                </div>
+                <div class="d-flex flex-column overflow-sm-scroll overflow-auto text-nowrap">
+                    <span><B> Name :</B> @Model.Customername</span>
+                    <span><B> Phone :</B> @Model.Customerphone</span>
+                    <span><B>No. of Persons :</B> @Model.Totalpersons</span>
+                    <span><B> Email :</B> @Model.Customeremail</span>
+                </div>
+            </div>
+            <div class="w-50 bg-white p-3 border rounded shadow-sm ">
+                <div class="d-flex justify-content-between">
+                    <h5><img src="~/images/icons/dinner-table.svg" height="20px" /> Table Details </h5>
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            toastr.options.closeButton = true;
+            $(document).on("click", "#exportPdfBtn", function (e) {
+                e.preventDefault();
+                var orderId = $(this).data("order-id");
+
+                window.location.href = "/Order/GenerateInvoice?orderId=" + orderId;
+
+                toastr.info("Excel file downloaded successfully.", "Success", {
+                    timeOut: 3000,
+                });
+            });
+        });
+    </script>
+}

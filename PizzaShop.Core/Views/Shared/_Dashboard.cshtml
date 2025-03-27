@@ -93,7 +93,8 @@
                 }
                 @if (TableAndSection)
                 {
-                    <li><a asp-controller="section" asp-action="Index"><i class="bi bi-database mx-2"></i>Table & Section</a></li>
+                    <li><a asp-controller="section" asp-action="Index"><i class="bi bi-database mx-2"></i>Table &
+                            Section</a></li>
                 }
                 @if (TaxAndFee)
                 {
@@ -101,7 +102,7 @@
                 }
                 @if (Order)
                 {
-                    <li><a href=""><i class="bi bi-list-ol mx-2"></i>Orders</a></li>
+                    <li><a asp-controller="Order" asp-action="Index"><i class="bi bi-list-ol mx-2"></i>Orders</a></li>
                 }
                 @if (Customer)
                 {
@@ -156,19 +157,23 @@
                                         }
                                         @if (Menu)
                                         {
-                                            <li><a asp-controller="Menu" asp-action="Index"><i class="bi bi-cake mx-2"></i>Menu</a></li>
+                                            <li><a asp-controller="Menu" asp-action="Index"><i
+                                                        class="bi bi-cake mx-2"></i>Menu</a></li>
                                         }
                                         @if (TableAndSection)
                                         {
-                                            <li><a asp-controller="section" asp-action="Index"><i class="bi bi-database mx-2"></i>Table & Section</a></li>
+                                            <li><a asp-controller="section" asp-action="Index"><i
+                                                        class="bi bi-database mx-2"></i>Table & Section</a></li>
                                         }
                                         @if (TaxAndFee)
                                         {
-                                            <li><a asp-controller="Tax" asp-action="Index"><i class="bi bi-cash-coin mx-2"></i>Taxes & Fees</a></li>
+                                            <li><a asp-controller="Tax" asp-action="Index"><i
+                                                        class="bi bi-cash-coin mx-2"></i>Taxes & Fees</a></li>
                                         }
                                         @if (Order)
                                         {
-                                            <li><a href=""><i class="bi bi-list-ol mx-2"></i>Orders</a></li>
+                                            <li><a asp-controller="Order" asp-action="Index"><i
+                                                        class="bi bi-list-ol mx-2"></i>Orders</a></li>
                                         }
                                         @if (Customer)
                                         {
@@ -181,9 +186,10 @@
                         </div>
                         <div class="container-fluid d-flex justify-content-end">
 
-                            <div class="dropdown">
-                                <button class="text-decoration-none bg-transparent rounded-circle border-light   "
-                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="custom-user-dropdown">
+                                <button
+                                    class="text-decoration-none bg-transparent rounded-circle border-light user-dropdown-btn"
+                                    type="button">
                                     @if (ViewBag.ImageUrl != null && ViewBag.ImageUrl != "default")
                                     {
                                         <img src="@ViewBag.ImageUrl" alt="User Image" class="rounded-circle" height="40"
@@ -195,10 +201,9 @@
                                             height="40" width="40" />
                                     }
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="user-dropdown-menu" style="display: none;">
                                     <li
                                         class="dropdown-item d-flex justify-content-center align-items-center gap-3 mb-1">
-
                                         @if (ViewBag.ImageUrl != null && ViewBag.ImageUrl != "default")
                                         {
                                             <img src="@ViewBag.ImageUrl" alt="User Image" class="rounded-circle" height="30"
@@ -209,17 +214,14 @@
                                             <img src="~/images/search-icon.svg" alt="User Image" class="rounded-circle"
                                                 height="30" width="30" />
                                         }
-
                                         @ViewBag.Username
-
                                     </li>
                                     <li><a asp-controller="Users" asp-action="UserProfile"
                                             class="dropdown-item border-bottom">My Profile</a></li>
                                     <li><a class="dropdown-item border-bottom" asp-action="ChangePassword"
                                             asp-controller="Users">Change Password</a></li>
                                     <li><a class="dropdown-item border-bottom" data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal2">Logout</a>
-                                    </li>
+                                            data-bs-target="#exampleModal2">Logout</a></li>
                                 </ul>
                             </div>
 
@@ -241,8 +243,11 @@
                                             <div class=""> Are you sure you want to logout?</div>
                                         </div>
                                         <div class="modal-footer d-flex-col justify-content-center ">
-                                            <button type="button" class="btn btn-primary" ><a asp-action="Logout" asp-controller="Home" class="text-decoration-none text-white border-none">Yes</a></button>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                            <button type="button" class="btn btn-primary"><a asp-action="Logout"
+                                                    asp-controller="Home"
+                                                    class="text-decoration-none text-white border-none">Yes</a></button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">No</button>
                                         </div>
                                     </div>
                                 </div>
@@ -264,11 +269,29 @@
 
         </div>
     </div>
-    
+
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/browse.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle custom user dropdown visibility
+            $('.user-dropdown-btn').on('click', function (e) {
+                e.preventDefault(); 
+                var $menu = $(this).siblings('.user-dropdown-menu');
+                $menu.toggle();
+            });
+
+            // Close dropdown when clicking outside
+            $(document).on('click', function (e) {
+                var $dropdown = $('.custom-user-dropdown');
+                if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0) {
+                    $('.user-dropdown-menu').hide(); // Hide all user dropdown menus
+                }
+            });
+        });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>

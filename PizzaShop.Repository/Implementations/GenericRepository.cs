@@ -235,17 +235,74 @@ namespace PizzaShop.Repository.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Modfierandgroupsmapping>?> GetByModifierGroupIdAsync(int? modifierGroupId) {
-             return await _context.Modfierandgroupsmappings.Where(u => u.Modifiergroupid == modifierGroupId).ToListAsync();
+        public async Task<List<Modfierandgroupsmapping>?> GetByModifierGroupIdAsync(int? modifierGroupId)
+        {
+            return await _context.Modfierandgroupsmappings.Where(u => u.Modifiergroupid == modifierGroupId).ToListAsync();
         }
 
 
         // ItemModifiergroupMapping
-        public async Task<List<ItemModifiergroupMapping>?> GetByItemIdAsync(int? itemId) {
+        public async Task<List<ItemModifiergroupMapping>?> GetByItemIdAsync(int? itemId)
+        {
             return await _context.ItemModifiergroupMappings.Where(u => u.Itemid == itemId && u.Isdeleted == false).ToListAsync();
         }
-        public async Task<List<ItemModifiergroupMapping>?> GetByModifierGroupIdMappingAsync(int? modifierGroupId) {
+        public async Task<List<ItemModifiergroupMapping>?> GetByModifierGroupIdMappingAsync(int? modifierGroupId)
+        {
             return await _context.ItemModifiergroupMappings.Where(u => u.Modifiergroupid == modifierGroupId).ToListAsync();
+        }
+
+
+
+        public async Task<List<OrderCutstomerViewModel>?> GetAllCustomerOrderMappingAsync()
+        {
+            var result = await (from mapping in _context.OrdersCustomersMappings
+                                join c in _context.Customers on mapping.Customerid equals c.Customerid
+                                join o in _context.Orders on mapping.Orderid equals o.Orderid into ordersGroup
+                                from o in ordersGroup.DefaultIfEmpty()
+                                where c.Isdeleted == false
+                                where o == null || o.Isdeleted == false
+                                select new OrderCutstomerViewModel
+                                {
+                                    Orderid = o != null ? o.Orderid : 0,
+                                    Customerid = c.Customerid,
+                                    Orderdescription = o != null ? o.Orderdescription : null,
+                                    Createdat = o != null ? o.Createdat : null,
+                                    Status = o != null ? o.Status : 0,
+                                    Paymentmode = o != null ? o.Paymentmode : 0,
+                                    Ratings = o != null ? o.Ratings : null,
+                                    Totalamount = o != null ? o.Totalamount : 0,
+                                    Customername = c.Customername,
+                                    Customeremail = c.Customeremail,
+                                    Customerphone = c.Customerphone
+                                }).ToListAsync();
+            return result;
+        }
+
+
+        public async Task<OrderDetailsHelperViewModel?> GetOrderDetailsByOrderId(int orderId)
+        {
+            var result = await (from mapping in _context.OrdersCustomersMappings
+                                join c in _context.Customers on mapping.Customerid equals c.Customerid
+                                join o in _context.Orders on mapping.Orderid equals o.Orderid
+                                where c.Isdeleted == false
+                                where o.Isdeleted == false
+                                where o.Orderid == orderId
+                                select new OrderDetailsHelperViewModel
+                                {
+                                    Orderid = o.Orderid,
+                                    Customerid = c.Customerid,
+                                    Orderdescription = o.Orderdescription,
+                                    Createdat = o.Createdat,
+                                    Status = o.Status,
+                                    Paymentmode = o.Paymentmode,
+                                    Ratings = o.Ratings,
+                                    Totalamount = o.Totalamount,
+                                    Customername = c.Customername,
+                                    Customeremail = c.Customeremail,
+                                    Customerphone = c.Customerphone,
+                                    Totalpersons = o.Totalpersons
+                                }).FirstOrDefaultAsync();
+            return result;
         }
     }
 }

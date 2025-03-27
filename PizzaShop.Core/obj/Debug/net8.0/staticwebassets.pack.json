@@ -133,6 +133,10 @@
       "PackagePath": "staticwebassets\\images\\logos\\pizzashop_logo.png"
     },
     {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\images\\pizzashop_logo.png",
+      "PackagePath": "staticwebassets\\images\\pizzashop_logo.png"
+    },
+    {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\images\\profile_div_bg.jpg",
       "PackagePath": "staticwebassets\\images\\profile_div_bg.jpg"
     },
@@ -161,6 +165,10 @@
       "PackagePath": "staticwebassets\\items\\0db8177b-9305-4f4c-9709-4449c8aba226.png"
     },
     {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\1102530b-ea31-4fd4-b124-7d06389e9a99.png",
+      "PackagePath": "staticwebassets\\items\\1102530b-ea31-4fd4-b124-7d06389e9a99.png"
+    },
+    {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\12c43607-28dc-4762-a071-772018905454.png",
       "PackagePath": "staticwebassets\\items\\12c43607-28dc-4762-a071-772018905454.png"
     },
@@ -169,12 +177,20 @@
       "PackagePath": "staticwebassets\\items\\162306f9-26a3-4c9e-9359-623f4bc3111b.png"
     },
     {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\166611ba-0b4f-4daa-80f7-13c727cbc7f0.png",
+      "PackagePath": "staticwebassets\\items\\166611ba-0b4f-4daa-80f7-13c727cbc7f0.png"
+    },
+    {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\1a258c92-28c4-4a0c-9dea-6bca6f0175e5.png",
       "PackagePath": "staticwebassets\\items\\1a258c92-28c4-4a0c-9dea-6bca6f0175e5.png"
     },
     {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\1b55aa74-3d93-4861-8c70-0b771efcf6a1.png",
       "PackagePath": "staticwebassets\\items\\1b55aa74-3d93-4861-8c70-0b771efcf6a1.png"
+    },
+    {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\22d8e0d5-4de4-4062-beaf-d04fb35fe0bf.jpg",
+      "PackagePath": "staticwebassets\\items\\22d8e0d5-4de4-4062-beaf-d04fb35fe0bf.jpg"
     },
     {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\315f986d-7c27-43c0-9da9-e3b082906007.png",
@@ -213,6 +229,10 @@
       "PackagePath": "staticwebassets\\items\\773bfb37-f092-4046-8bc7-edd99280b863.jpg"
     },
     {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\820a2b71-256b-4c35-9ea8-22ef108f40c0.png",
+      "PackagePath": "staticwebassets\\items\\820a2b71-256b-4c35-9ea8-22ef108f40c0.png"
+    },
+    {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\84f0c738-de6b-4b30-86d1-e4bbd3d4db3b.png",
       "PackagePath": "staticwebassets\\items\\84f0c738-de6b-4b30-86d1-e4bbd3d4db3b.png"
     },
@@ -221,8 +241,16 @@
       "PackagePath": "staticwebassets\\items\\8a6839d2-2cfd-414d-bc75-cdcc648d4c43.png"
     },
     {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\8b84ed23-2cfa-440b-9c0c-fee5d7d3cba4.png",
+      "PackagePath": "staticwebassets\\items\\8b84ed23-2cfa-440b-9c0c-fee5d7d3cba4.png"
+    },
+    {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\8c4602b0-67b3-458a-91e3-06eed0131f41.png",
       "PackagePath": "staticwebassets\\items\\8c4602b0-67b3-458a-91e3-06eed0131f41.png"
+    },
+    {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\8ce1f8f7-2a3d-45ed-bbfe-70940b0565bb.jpg",
+      "PackagePath": "staticwebassets\\items\\8ce1f8f7-2a3d-45ed-bbfe-70940b0565bb.jpg"
     },
     {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\8f83cc7b-19f6-40a8-aee6-ad6c110ad6da.png",
@@ -281,6 +309,14 @@
       "PackagePath": "staticwebassets\\items\\e3ddfda9-e686-4bd0-a974-d721a40da608.png"
     },
     {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\ea948c2b-6084-4203-9689-b48453134d57.jpg",
+      "PackagePath": "staticwebassets\\items\\ea948c2b-6084-4203-9689-b48453134d57.jpg"
+    },
+    {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\f3287e48-037c-41c3-b7f0-01d5e31c9487.png",
+      "PackagePath": "staticwebassets\\items\\f3287e48-037c-41c3-b7f0-01d5e31c9487.png"
+    },
+    {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\f48c62d7-364d-47d8-93e5-dae633415e84.png",
       "PackagePath": "staticwebassets\\items\\f48c62d7-364d-47d8-93e5-dae633415e84.png"
     },
@@ -289,16 +325,36 @@
       "PackagePath": "staticwebassets\\items\\f6528780-366e-4e89-8654-82b6a209cc11.png"
     },
     {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\items\\fe73eed8-8d01-4dee-ab0f-bce793f92ed5.jpg",
+      "PackagePath": "staticwebassets\\items\\fe73eed8-8d01-4dee-ab0f-bce793f92ed5.jpg"
+    },
+    {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\js\\Orders_scripts.js",
+      "PackagePath": "staticwebassets\\js\\Orders_scripts.js"
+    },
+    {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\js\\Section.js",
       "PackagePath": "staticwebassets\\js\\Section.js"
+    },
+    {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\js\\Tax.js",
+      "PackagePath": "staticwebassets\\js\\Tax.js"
     },
     {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\js\\addItem.js",
       "PackagePath": "staticwebassets\\js\\addItem.js"
     },
     {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\js\\addModifierGroup.js",
+      "PackagePath": "staticwebassets\\js\\addModifierGroup.js"
+    },
+    {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\js\\category-scripts.js",
       "PackagePath": "staticwebassets\\js\\category-scripts.js"
+    },
+    {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\js\\editModifierGroup.js",
+      "PackagePath": "staticwebassets\\js\\editModifierGroup.js"
     },
     {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\js\\menu.js",
@@ -563,6 +619,10 @@
     {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\uploads\\1163888a-fcce-4ce5-9257-493faf749621.jpg",
       "PackagePath": "staticwebassets\\uploads\\1163888a-fcce-4ce5-9257-493faf749621.jpg"
+    },
+    {
+      "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\uploads\\1442f643-1ffa-4c53-8dde-7a34f3276389_daredevil.jpg",
+      "PackagePath": "staticwebassets\\uploads\\1442f643-1ffa-4c53-8dde-7a34f3276389_daredevil.jpg"
     },
     {
       "Id": "F:\\23-03-25\\PizzaShop.Core\\wwwroot\\uploads\\154bbf08-8a7d-4e50-b7c9-4d781217c147_86cc99a7-878a-4d2d-bba5-d2c38f94b88f.jpg",
